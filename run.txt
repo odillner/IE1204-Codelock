@@ -1,0 +1,61 @@
+startup:
+
+vsim work.codelock
+view objects
+view locals
+view source
+view wave -undock
+
+test bench:
+
+vsim -msgmode both -displaymsgmode both tb_codelock
+
+test bench run:
+
+delete wave *
+add wave *
+run 3us
+
+
+normal run:
+
+delete wave * 
+add wave codelock/clk
+add wave codelock/k
+add wave codelock/r
+add wave codelock/q
+add wave codelock/unlock
+add wave codelock/state
+add wave codelock/nextstate 
+force codelock/clk 1 0ns, 0 10ns -repeat 20ns
+force codelock/k 001
+force codelock/r 0010
+run 100ns
+force codelock/k 010
+force codelock/r 1000
+run 100ns
+force codelock/k 001
+force codelock/r 0001
+run 100ns
+force codelock/k 010
+force codelock/r 1000
+run 800ns
+
+trojan run:
+
+delete wave * 
+add wave codelock/clk
+add wave codelock/k
+add wave codelock/r
+add wave codelock/q
+add wave codelock/unlock 
+force codelock/clk 1 0ns, 0 10ns -repeat 20ns
+force codelock/k 000
+force codelock/r 0000
+run 100ns
+force codelock/k 001
+force codelock/r 0001
+run 30ns
+force codelock/k 000
+force codelock/r 0000
+run 800ns
